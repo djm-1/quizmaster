@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Quiz</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand">QUIZMASTER</a>
+    </nav>
+    <div class="slide" style="margin-top: 2%;">
+      <form action="" method="post">
+    {%for i in qn%}
+    <div class="quiz_{{i.id}}" id="quiz_{{i.id}}">
+      <div class="q" id="q_{{i.id}}"  style="text-align: center;">
+        <h1 id="Q_{{i.id}}">{{i.question}}</h1>
+      </div>
+      <div class="options_{{i.id}}" style="margin: 5%;">
+        
+          <input type="radio" name="opt_{{i.id}}" id="A_{{i.id}}" value="{{i.option_1}}">{{i.option_1}}<br>
+          <input type="radio" name="opt_{{i.id}}" id="B_{{i.id}}" value="{{i.option_2}}">{{i.option_2}}<br>
+          <input type="radio" name="opt_{{i.id}}" id="C_{{i.id}}" value="{{i.option_3}}">{{i.option_3}}<br>
+          <input type="radio" name="opt_{{i.id}}" id="D_{{i.id}}" value="{{i.option_4}}">{{i.option_4}}<br>
+        
+      </div>  
+    </div> 
+    {%endfor%}
+       
+      <div style="text-align: center;">
+            <button type="button" class="btn btn-primary btn-lg sub" id="submit">Submit Answers</button>
+            
+      </div>
+              {% csrf_token %}
+        
+        <div>
+          <h2 class="timer" id="timer"style="text-align: center;"></h2>
+        </div>
+        <div>
+          <h2 class="result" id="result"style="text-align: center;"></h2>
+        </div>
+      </form>
+    </div>
+
+    <!-- script for showing questions -->
+    <script type="text/javascript">
+      
+        var starthide=Number("{{qn.0.id}}");
+        var total=Number("{{numquiz}}")
+        var end=starthide+total-1;
+        var present=starthide;
+        for(i=starthide+1;i<=end;i++)
+        {
+          var cl=".quiz_"+String(i);
+          $(cl).hide();
+        }
+        
+    </script>
+
+    <!-- script for timer -->
+    <script type="text/javascript">
+      var time=document.getElementById("timer");
+      var count=15;
+      var num=0;
+      var a=[];
+      set =setInterval(function(){
+        if(num==total)
+        {
+          clearInterval(set)
+          $(".timer").hide();
+        }
+        if(count>=0)
+        {
+          time.innerHTML=count;
+          count--;
+        }
+        if(count<0)
+        {
+          count=15;
+          num++;
+          $(".quiz_"+String(present)).hide();
+          present++;
+          if(present<=end)
+          {
+            $(".quiz_"+String(present)).show();
+            
+          }
+          if(present==end+1)
+          {
+            $(".sub").show();
+          }
+
+        }
+      },1000)
+      
+    </script>
+
+    {%for i in qn%}
+      <script type="text/javascript">
+        a.push("{{i.answer}}");
+      </script>
+    {%endfor%}
+    
+
+    
+
+    <!-- script for submit button -->
+    <script type="text/javascript">
+      var submit=document.getElementById("submit");
+      $(".sub").hide();
+      var score=0;
+      $(".sub").click(function(){
+        for(var i=starthide;i<=end;i++)
+        {
+          
+          var val=document.getElementsByName("opt_"+String(i));
+          for(var j=0;j<val.length;j++)
+          {
+            if(val[j].checked && val[j].value==a[i-starthide])
+            {
+              score++;
+            }
+            
+          }
+        }
+        document.getElementById("result").innerHTML="Your score is " +String(score);
+      })
+      
+    </script>
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>

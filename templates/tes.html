@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    {% extends 'base.html' %}
+
+    {% block content %}
+    
+    <h3 id="timer"></h3>
+    <form action="" method="post">
+        <h2 id="Q"></h2>
+        <input type="radio" name="opt" id="A"><label for="A"></label><br>
+        <input type="radio" name="opt" id="B"><label for="B"></label><br>
+        <input type="radio" name="opt" id="C"><label for="C"></label><br>
+        <input type="radio" name="opt" id="D"><label for="D"></label><br>
+        <button type="button" id="resp">save answer</button>
+        <h3 id="score"></h3>
+        {% csrf_token %}
+    </form>
+    <script type="text/javascript">
+        var q=[]
+        var opt1=[]
+        var opt2=[]
+        var opt3=[]
+        var opt4=[]
+        var a=[]
+        var resp=[]
+    </script>
+    {% for i in qn %}
+        <script type="text/javascript">
+            q.push("{{i.question}}")
+            opt1.push("{{i.option_1}}")
+            opt2.push("{{i.option_2}}")
+            opt3.push("{{i.option_3}}")
+            opt4.push("{{i.option_4}}")
+            a.push("{{i.answer}}")
+        </script>
+    {% endfor %}
+    <script type="text/javascript">
+        var ques=document.getElementById("Q")
+        var num=0;
+        var count=15;
+        var timer=document.getElementById("timer");
+        
+        var stopwa= setInterval(function(){
+            if(count>=0)
+            {
+                timer.innerHTML=count;
+                count--;
+                ques.innerHTML=q[num];
+                $('label[for=A]').html(opt1[num]);
+                $('label[for=B]').html(opt2[num]);
+                $('label[for=C]').html(opt3[num]);
+                $('label[for=D]').html(opt4[num]);
+
+            }
+            if(count<0)
+            {
+                if(num<3)
+                {
+                    count=15;
+                    num++;
+                    checkval()
+                }
+                else
+                {
+                    clearInterval("stopwa")
+                    
+                }
+            }
+            
+        },1000)
+            
+    </script>
+    {% endblock %}
+</body>
+</html>
