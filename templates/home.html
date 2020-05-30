@@ -129,7 +129,8 @@
             
           }
         }
-        document.getElementById("result").innerHTML="Your score is " +String(score);
+        document.getElementById("result").innerHTML="Your score is " +String(score)+"/{{numquiz}}";
+        $(".sub").attr("disabled", true);
       })
       
     </script>
