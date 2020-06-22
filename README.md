@@ -1,2 +1,2 @@
 # quizmaster
-A aimple quiz application using django
+A simple quiz application using django
